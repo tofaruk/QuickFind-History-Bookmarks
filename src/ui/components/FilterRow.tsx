@@ -26,15 +26,15 @@ export function FilterRow({
 }: FilterRowProps) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <div className="w-[180px]">
+      <div className="w-45">
         <DomainSelect value={domain} options={domainOptions} onChange={onDomainChange} />
       </div>
 
-      <div className="w-[160px]">
+      <div className="w-40">
         <TimeRangeSelect value={timeRange} onChange={onTimeRangeChange} />
       </div>
 
-      <div className="w-[120px]">
+      <div className="w-30">
         <LimitSelect value={limit} onChange={onLimitChange} />
       </div>
     </div>
