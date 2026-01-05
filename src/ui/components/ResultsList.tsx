@@ -111,11 +111,11 @@ export function ResultsList({
                       onClick={() => onOpenItem?.(r)}
                       title={r.url}
                     >
-                      <img
+                       <img
                         src={r.faviconUrl}
                         alt=""
                         className="mt-0.5 h-4 w-4 flex-none"
-                      />
+                      /> 
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-medium text-gray-900">
                           {r.title}

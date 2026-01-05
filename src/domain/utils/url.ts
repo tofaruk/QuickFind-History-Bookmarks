@@ -37,13 +37,11 @@ export function matchesDomain(hostname: string, domain: string): boolean {
  * Using size 16 for list; can increase later.
  */
 export function faviconUrlFor(pageUrl: string, size = 16): string {
-  // favicon2 is supported in Chromium-based browsers
-  /// return `chrome://favicon2/?size=${size}&url=${encodeURIComponent(pageUrl)}`
-
-  const url = new URL(chrome.runtime.getURL("/_favicon/"));
-  url.searchParams.set("pageUrl", pageUrl);
-  url.searchParams.set("size",size.toString());
-  //return url.toString();
-
-  return `chrome://_favicon/?size=${size}&pageUrl=${encodeURIComponent(pageUrl)}`
+  // MV3 favicon endpoint:
+  // chrome-extension://<id>/_favicon/?pageUrl=<...>&size=<...>
+  const base = chrome.runtime.getURL("/_favicon/")
+  const u = new URL(base)
+  u.searchParams.set("pageUrl", pageUrl)
+  u.searchParams.set("size", String(size))
+  return u.toString()
 }
