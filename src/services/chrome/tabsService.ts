@@ -110,3 +110,21 @@ export async function searchOpenTabs(
 
   return queryFiltered.slice(0, filters.limit);
 }
+
+
+export async function closeTabs(tabIds: number[]): Promise<void> {
+  if (typeof chrome === "undefined" || !chrome.tabs?.remove) {
+    throw new Error("chrome.tabs.remove API is not available.")
+  }
+
+  const unique = Array.from(new Set(tabIds)).filter((id) => Number.isFinite(id))
+  if (unique.length === 0) return
+
+  await new Promise<void>((resolve, reject) => {
+    chrome.tabs.remove(unique, () => {
+      const err = chrome.runtime?.lastError
+      if (err) reject(new Error(err.message))
+      else resolve()
+    })
+  })
+}

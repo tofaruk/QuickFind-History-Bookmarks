@@ -16,7 +16,7 @@ import type { ResultItem } from "../../domain/types/result"
 import { deleteHistoryUrls } from "../../services/chrome/historyService"
 import { deleteBookmarkIds } from "../../services/chrome/bookmarkService"
 import { toBookmarkId } from "../../domain/utils/resultIds"
-import { focusTab, openUrl } from "../../services/chrome/tabsService"
+import { focusTab, openUrl, closeTabs } from "../../services/chrome/tabsService"
 export function PopupShell() {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [domainOptions, setDomainOptions] = useState<DomainOption[]>([])
@@ -81,27 +81,31 @@ export function PopupShell() {
     setConfirmOpen(true)
   }
 
-  async function runDelete(items: ResultItem[]) {
-    const urlsToDelete: string[] = []
-    const bookmarkIdsToDelete: string[] = []
+async function runDelete(items: ResultItem[]) {
+  const urlsToDelete: string[] = []
+  const bookmarkIdsToDelete: string[] = []
+  const tabIdsToClose: number[] = []
 
-    for (const it of items) {
-      if (it.kind === "history") {
-        urlsToDelete.push(it.url)
-      } else if (it.kind === "bookmark") {
-        const bid = toBookmarkId(it.id)
-        if (bid) bookmarkIdsToDelete.push(bid)
-      }
+  for (const it of items) {
+    if (it.kind === "history") {
+      urlsToDelete.push(it.url)
+    } else if (it.kind === "bookmark") {
+      const bid = toBookmarkId(it.id)
+      if (bid) bookmarkIdsToDelete.push(bid)
+    } else if (it.kind === "tab") {
+      if (typeof it.tabId === "number") tabIdsToClose.push(it.tabId)
     }
-
-    // Perform deletions
-    if (urlsToDelete.length) await deleteHistoryUrls(urlsToDelete)
-    if (bookmarkIdsToDelete.length) await deleteBookmarkIds(bookmarkIdsToDelete)
-
-    // Clear selection + refresh results
-    clearSelection()
-    setRefreshToken((n) => n + 1)
   }
+
+  // Close tabs first (keeps UI feeling instant)
+  if (tabIdsToClose.length) await closeTabs(tabIdsToClose)
+  if (urlsToDelete.length) await deleteHistoryUrls(urlsToDelete)
+  if (bookmarkIdsToDelete.length) await deleteBookmarkIds(bookmarkIdsToDelete)
+
+  clearSelection()
+  setRefreshToken((n) => n + 1)
+}
+
 
   function requestDeleteOne(item: ResultItem) {
     requestConfirm(

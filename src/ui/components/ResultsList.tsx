@@ -1,19 +1,19 @@
-import type { ResultItem } from "../../domain/types/result"
+import type { ResultItem } from "../../domain/types/result";
 
 type ResultsListProps = {
-  query: string
-  results: ResultItem[]
-  isLoading?: boolean
-  error?: string | null
+  query: string;
+  results: ResultItem[];
+  isLoading?: boolean;
+  error?: string | null;
 
-  selectedIds: Set<string>
-  onToggleSelected: (id: string) => void
-  onSelectAllVisible: () => void
-  onClearSelection: () => void
+  selectedIds: Set<string>;
+  onToggleSelected: (id: string) => void;
+  onSelectAllVisible: () => void;
+  onClearSelection: () => void;
 
-  onOpenItem?: (item: ResultItem) => void
-  onRequestDeleteOne: (item: ResultItem) => void
-}
+  onOpenItem?: (item: ResultItem) => void;
+  onRequestDeleteOne: (item: ResultItem) => void;
+};
 
 export function ResultsList({
   query,
@@ -27,20 +27,20 @@ export function ResultsList({
   onOpenItem,
   onRequestDeleteOne,
 }: ResultsListProps) {
-  const trimmed = query.trim()
-  const hasQuery = trimmed.length > 0
-  const hasResults = results.length > 0
+  const trimmed = query.trim();
+  const hasQuery = trimmed.length > 0;
+  const hasResults = results.length > 0;
 
   const allVisibleSelected =
-    hasResults && results.every((r) => selectedIds.has(r.id))
+    hasResults && results.every((r) => selectedIds.has(r.id));
   const someVisibleSelected =
-    hasResults && results.some((r) => selectedIds.has(r.id))
+    hasResults && results.some((r) => selectedIds.has(r.id));
 
   const subtitle = hasQuery
     ? `Searching for “${trimmed}”`
     : hasResults
-      ? "Showing items for selected filters"
-      : "Type to search, or select a site to browse"
+    ? "Showing items for selected filters"
+    : "Type to search, or select a site to browse";
 
   return (
     <div className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white">
@@ -58,11 +58,13 @@ export function ResultsList({
                   type="checkbox"
                   checked={allVisibleSelected}
                   ref={(el) => {
-                    if (el) el.indeterminate = !allVisibleSelected && someVisibleSelected
+                    if (el)
+                      el.indeterminate =
+                        !allVisibleSelected && someVisibleSelected;
                   }}
                   onChange={() => {
-                    if (allVisibleSelected) onClearSelection()
-                    else onSelectAllVisible()
+                    if (allVisibleSelected) onClearSelection();
+                    else onSelectAllVisible();
                   }}
                 />
                 Select visible
@@ -83,13 +85,15 @@ export function ResultsList({
               {hasQuery ? "No results" : "Start typing to search"}
             </div>
             <div className="mt-1 text-xs text-gray-500">
-              {hasQuery ? "Try a different keyword." : "Or select a site to browse recent items."}
+              {hasQuery
+                ? "Try a different keyword."
+                : "Or select a site to browse recent items."}
             </div>
           </div>
         ) : (
           <ul className="divide-y divide-gray-100">
             {results.map((r) => {
-              const checked = selectedIds.has(r.id)
+              const checked = selectedIds.has(r.id);
               return (
                 <li key={r.id} className="px-3 py-2 hover:bg-gray-50">
                   <div className="flex items-start gap-3">
@@ -107,14 +111,22 @@ export function ResultsList({
                       onClick={() => onOpenItem?.(r)}
                       title={r.url}
                     >
-                      <img src={r.faviconUrl} alt="" className="mt-0.5 h-4 w-4 flex-none" />
+                      <img
+                        src={r.faviconUrl}
+                        alt=""
+                        className="mt-0.5 h-4 w-4 flex-none"
+                      />
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-medium text-gray-900">
                           {r.title}
                         </div>
-                        <div className="truncate text-xs text-gray-500">{r.url}</div>
+                        <div className="truncate text-xs text-gray-500">
+                          {r.url}
+                        </div>
                         {r.metaLine && (
-                          <div className="truncate text-[11px] text-gray-400">{r.metaLine}</div>
+                          <div className="truncate text-[11px] text-gray-400">
+                            {r.metaLine}
+                          </div>
                         )}
                       </div>
                     </button>
@@ -127,18 +139,18 @@ export function ResultsList({
                         type="button"
                         onClick={() => onRequestDeleteOne(r)}
                         className="rounded-lg px-2 py-1 text-xs text-red-700 hover:bg-red-50"
-                        title="Delete"
+                        title={r.kind === "tab" ? "Close tab" : "Delete"}
                       >
-                        Delete
+                        {r.kind === "tab" ? "Close" : "Delete"}
                       </button>
                     </div>
                   </div>
                 </li>
-              )
+              );
             })}
           </ul>
         )}
       </div>
     </div>
-  )
+  );
 }
