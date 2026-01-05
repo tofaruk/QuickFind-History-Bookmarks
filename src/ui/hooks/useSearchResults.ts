@@ -19,8 +19,12 @@ export function useSearchResults(filters: FilterState) {
 
   useEffect(() => {
     const q = effectiveFilters.query.trim()
+    const hasDomain = !!effectiveFilters.domain
 
-    if (q.length === 0) {
+    // ✅ New premium UX rule:
+    // - If query is empty AND domain is selected → show recent matches for that domain.
+    // - If query is empty AND no domain → show nothing (empty state).
+    if (q.length === 0 && !hasDomain) {
       setResults([])
       setIsLoading(false)
       setError(null)
@@ -44,12 +48,6 @@ export function useSearchResults(filters: FilterState) {
           parts.push(...(await searchBookmarks(effectiveFilters)))
         }
 
-        // When scope is "both", we want a useful mixed order:
-        // - history sorted by lastVisitTime already
-        // - bookmarks sorted by title
-        // We’ll do a simple merge strategy:
-        //   - if both: prefer recent history first, then bookmarks
-        // (Later we can interleave/rank)
         const merged =
           effectiveFilters.scope === "both"
             ? [

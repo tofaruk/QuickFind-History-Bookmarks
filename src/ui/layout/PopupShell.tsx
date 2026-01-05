@@ -1,38 +1,37 @@
-import SearchBar from "../components/SearchBar";
-import { ScopeTabs } from "../components/ScopeTabs";
-import { FilterRow } from "../components/FilterRow";
-import { ResultsList } from "../components/ResultsList";
-import type { FilterState, Scope } from "../../domain/types/filter";
-import { DEFAULT_FILTERS } from "../../domain/utils/defaultFilters";
-import { useSearchResults } from "../hooks/useSearchResults";
-import { openUrl } from "../../services/chrome/tabsService";
-import { useEffect, useMemo, useState } from "react";
-import type { DomainOption } from "../../services/chrome/domainService";
-import { getTopDomains } from "../../services/chrome/domainService";
-import { DomainSelect } from "../components/DomainSelect";
+import { useEffect, useMemo, useState } from "react"
+import SearchBar from "../components/SearchBar"
+import { ScopeTabs } from "../components/ScopeTabs"
+import { FilterRow } from "../components/FilterRow"
+import { ResultsList } from "../components/ResultsList"
+import type { FilterState, Scope } from "../../domain/types/filter"
+import { DEFAULT_FILTERS } from "../../domain/utils/defaultFilters"
+import { useSearchResults } from "../hooks/useSearchResults"
+import { openUrl } from "../../services/chrome/tabsService"
+import type { DomainOption } from "../../services/chrome/domainService"
+import { getTopDomains } from "../../services/chrome/domainService"
 
 export function PopupShell() {
-  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
+  const [domainOptions, setDomainOptions] = useState<DomainOption[]>([])
 
-  const scopeValue: Scope = filters.scope;
-  const trimmedQuery = useMemo(() => filters.query.trim(), [filters.query]);
+  const scopeValue: Scope = filters.scope
+  const trimmedQuery = useMemo(() => filters.query.trim(), [filters.query])
 
-  const { results, isLoading, error } = useSearchResults(filters);
-  const [domainOptions, setDomainOptions] = useState<DomainOption[]>([]);
+  const { results, isLoading, error } = useSearchResults(filters)
 
   useEffect(() => {
-    let cancelled = false;
-    getTopDomains({ maxDomains: 20 })
+    let cancelled = false
+    getTopDomains({ maxDomains: 24 })
       .then((opts) => {
-        if (!cancelled) setDomainOptions(opts);
+        if (!cancelled) setDomainOptions(opts)
       })
       .catch(() => {
-        // ignore; domain filter still usable as "All sites"
-      });
+        // If it fails (rare), we still have a functional "All sites" experience.
+      })
     return () => {
-      cancelled = true;
-    };
-  }, []);
+      cancelled = true
+    }
+  }, [])
 
   return (
     <div className="flex h-full flex-col gap-3">
@@ -62,21 +61,26 @@ export function PopupShell() {
         onChange={(s) => setFilters((prev) => ({ ...prev, scope: s }))}
       />
 
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="w-[180px]">
-          <DomainSelect
-            value={filters.domain}
-            options={domainOptions}
-            onChange={(d) => setFilters((prev) => ({ ...prev, domain: d }))}
-          />
-        </div>
-
-        <FilterRow
-          domain={filters.domain}
-          timeRange={filters.timeRange}
-          limit={filters.limit}
-        />
-      </div>
+      <FilterRow
+        domain={filters.domain}
+        timeRange={filters.timeRange}
+        limit={filters.limit}
+        domainOptions={domainOptions}
+        onDomainChange={(d) => setFilters((prev) => ({ ...prev, domain: d }))}
+        onTimeClick={() => {
+          // next step: real time dropdown
+          // placeholder: toggle today <-> thisWeek for quick testing
+          setFilters((prev) => ({
+            ...prev,
+            timeRange: prev.timeRange.kind === "today" ? { kind: "thisWeek" } : { kind: "today" },
+          }))
+        }}
+        onLimitClick={() => {
+          // next step: real limit dropdown
+          // placeholder: toggle 50 <-> 100
+          setFilters((prev) => ({ ...prev, limit: prev.limit === 50 ? 100 : 50 }))
+        }}
+      />
 
       <div className="min-h-0 flex-1">
         <ResultsList
@@ -89,9 +93,9 @@ export function PopupShell() {
       </div>
 
       <footer className="flex items-center justify-between text-xs text-gray-500">
-        <span>History is now wired ✅</span>
+        <span>Domain filter is live ✅</span>
         <span>{filters.scope.toUpperCase()}</span>
       </footer>
     </div>
-  );
+  )
 }

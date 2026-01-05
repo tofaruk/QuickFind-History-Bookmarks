@@ -9,9 +9,12 @@ function assertChromeHistoryAvailable() {
 export type DomainOption = {
   hostname: string
   count: number
-  faviconUrl?: string
 }
 
+/**
+ * Returns top domains from recent history (default: last 14 days).
+ * Used for the "Site" dropdown.
+ */
 export async function getTopDomains(options?: {
   maxHistoryItems?: number
   maxDomains?: number
@@ -21,12 +24,13 @@ export async function getTopDomains(options?: {
 
   const maxHistoryItems = options?.maxHistoryItems ?? 2000
   const maxDomains = options?.maxDomains ?? 20
-  const startTime = options?.startTime ?? Date.now() - 1000 * 60 * 60 * 24 * 14 // last 14 days
+  const startTime =
+    options?.startTime ?? Date.now() - 1000 * 60 * 60 * 24 * 14 // last 14 days
 
   const items: chrome.history.HistoryItem[] = await new Promise((resolve, reject) => {
     chrome.history.search(
       { text: "", startTime, maxResults: maxHistoryItems },
-      (res) => {
+      (res: chrome.history.HistoryItem[]) => {
         const err = chrome.runtime?.lastError
         if (err) reject(new Error(err.message))
         else resolve(res ?? [])
@@ -43,10 +47,8 @@ export async function getTopDomains(options?: {
     counts.set(host, (counts.get(host) ?? 0) + 1)
   }
 
-  const sorted = [...counts.entries()]
+  return [...counts.entries()]
     .map(([hostname, count]) => ({ hostname, count }))
     .sort((a, b) => b.count - a.count)
     .slice(0, maxDomains)
-
-  return sorted
 }
