@@ -5,27 +5,29 @@ import { searchHistory } from "../../services/chrome/historyService"
 import { searchBookmarks } from "../../services/chrome/bookmarkService"
 import { useDebouncedValue } from "./useDebouncedValue"
 
+const FETCH_LIMIT = 200
+
 export function useSearchResults(filters: FilterState) {
-  const [results, setResults] = useState<ResultItem[]>([])
+  const [baseResults, setBaseResults] = useState<ResultItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const debouncedQuery = useDebouncedValue(filters.query, 200)
 
-  const effectiveFilters = useMemo<FilterState>(
-    () => ({ ...filters, query: debouncedQuery }),
-    [filters, debouncedQuery],
+  // Fetch filters ignore "limit" to prevent refetch on limit changes
+  const fetchFilters = useMemo<FilterState>(
+    () => ({ ...filters, query: debouncedQuery, limit: FETCH_LIMIT }),
+    // IMPORTANT: exclude filters.limit
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filters.query, debouncedQuery, filters.scope, filters.domain, filters.timeRange],
   )
 
   useEffect(() => {
-    const q = effectiveFilters.query.trim()
-    const hasDomain = !!effectiveFilters.domain
+    const q = fetchFilters.query.trim()
+    const hasDomain = !!fetchFilters.domain
 
-    // ✅ New premium UX rule:
-    // - If query is empty AND domain is selected → show recent matches for that domain.
-    // - If query is empty AND no domain → show nothing (empty state).
     if (q.length === 0 && !hasDomain) {
-      setResults([])
+      setBaseResults([])
       setIsLoading(false)
       setError(null)
       return
@@ -40,23 +42,23 @@ export function useSearchResults(filters: FilterState) {
 
         const parts: ResultItem[] = []
 
-        if (effectiveFilters.scope === "history" || effectiveFilters.scope === "both") {
-          parts.push(...(await searchHistory(effectiveFilters)))
+        if (fetchFilters.scope === "history" || fetchFilters.scope === "both") {
+          parts.push(...(await searchHistory(fetchFilters)))
         }
 
-        if (effectiveFilters.scope === "bookmarks" || effectiveFilters.scope === "both") {
-          parts.push(...(await searchBookmarks(effectiveFilters)))
+        if (fetchFilters.scope === "bookmarks" || fetchFilters.scope === "both") {
+          parts.push(...(await searchBookmarks(fetchFilters)))
         }
 
         const merged =
-          effectiveFilters.scope === "both"
+          fetchFilters.scope === "both"
             ? [
                 ...parts.filter((p) => p.kind === "history"),
                 ...parts.filter((p) => p.kind === "bookmark"),
               ]
             : parts
 
-        if (!cancelled) setResults(merged)
+        if (!cancelled) setBaseResults(merged)
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : String(e))
       } finally {
@@ -68,7 +70,10 @@ export function useSearchResults(filters: FilterState) {
     return () => {
       cancelled = true
     }
-  }, [effectiveFilters])
+  }, [fetchFilters])
+
+  // Slice locally for UI limit (no refetch)
+  const results = useMemo(() => baseResults.slice(0, filters.limit), [baseResults, filters.limit])
 
   return { results, isLoading, error }
 }
