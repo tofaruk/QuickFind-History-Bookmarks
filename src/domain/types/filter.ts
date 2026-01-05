@@ -1,4 +1,4 @@
-export type Scope = "history" | "bookmarks" | "both"
+export type Scope = "history" | "bookmarks" | "open" | "all"
 
 export type TimeRange =
   | { kind: "today" }

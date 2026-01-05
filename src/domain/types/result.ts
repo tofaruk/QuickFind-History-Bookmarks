@@ -1,4 +1,4 @@
-export type ResultKind = "history" | "bookmark"
+export type ResultKind = "history" | "bookmark" | "tab"
 
 export type ResultItem = {
   id: string
@@ -7,6 +7,10 @@ export type ResultItem = {
   url: string
   hostname: string
   faviconUrl?: string
-  metaLine?: string // e.g. "Last visit: …" or "Folder: …"
-  lastVisitTime?: number // for history sorting/display
+  metaLine?: string
+  lastVisitTime?: number
+
+  // For open tabs:
+  tabId?: number
+  windowId?: number
 }

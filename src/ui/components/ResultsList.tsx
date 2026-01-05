@@ -11,7 +11,7 @@ type ResultsListProps = {
   onSelectAllVisible: () => void
   onClearSelection: () => void
 
-  onOpenUrl?: (url: string) => void
+  onOpenItem?: (item: ResultItem) => void
   onRequestDeleteOne: (item: ResultItem) => void
 }
 
@@ -24,7 +24,7 @@ export function ResultsList({
   onToggleSelected,
   onSelectAllVisible,
   onClearSelection,
-  onOpenUrl,
+  onOpenItem,
   onRequestDeleteOne,
 }: ResultsListProps) {
   const trimmed = query.trim()
@@ -104,7 +104,7 @@ export function ResultsList({
                     <button
                       type="button"
                       className="flex min-w-0 flex-1 items-start gap-3 text-left"
-                      onClick={() => onOpenUrl?.(r.url)}
+                      onClick={() => onOpenItem?.(r)}
                       title={r.url}
                     >
                       <img src={r.faviconUrl} alt="" className="mt-0.5 h-4 w-4 flex-none" />

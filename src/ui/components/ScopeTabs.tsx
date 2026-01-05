@@ -1,4 +1,4 @@
-type Scope = "history" | "bookmarks" | "both"
+type Scope = "history" | "bookmarks" | "open" | "all"
 
 type ScopeTabsProps = {
   value?: Scope
@@ -6,12 +6,13 @@ type ScopeTabsProps = {
 }
 
 const TABS: Array<{ key: Scope; label: string }> = [
+  { key: "open", label: "Open Tabs" },
   { key: "history", label: "History" },
   { key: "bookmarks", label: "Bookmarks" },
-  { key: "both", label: "Both" },
+  { key: "all", label: "All" },
 ]
 
-export function ScopeTabs({ value = "both", onChange }: ScopeTabsProps) {
+export function ScopeTabs({ value = "all", onChange }: ScopeTabsProps) {
   return (
     <div className="flex items-center gap-2">
       <div className="inline-flex rounded-xl bg-gray-100 p-1">
@@ -36,7 +37,8 @@ export function ScopeTabs({ value = "both", onChange }: ScopeTabsProps) {
       <div className="text-xs text-gray-500">
         {value === "history" && "Searching browsing history"}
         {value === "bookmarks" && "Searching bookmarks"}
-        {value === "both" && "Searching history + bookmarks"}
+        {value === "open" && "Searching open tabs"}
+        {value === "all" && "Searching everything"}
       </div>
     </div>
   )

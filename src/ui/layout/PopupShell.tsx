@@ -8,7 +8,6 @@ import { ConfirmDialog } from "../components/ConfirmDialog"
 import type { FilterState, Scope } from "../../domain/types/filter"
 import { DEFAULT_FILTERS } from "../../domain/utils/defaultFilters"
 import { useSearchResults } from "../hooks/useSearchResults"
-import { openUrl } from "../../services/chrome/tabsService"
 
 import type { DomainOption } from "../../services/chrome/domainService"
 import { getTopDomains } from "../../services/chrome/domainService"
@@ -17,7 +16,7 @@ import type { ResultItem } from "../../domain/types/result"
 import { deleteHistoryUrls } from "../../services/chrome/historyService"
 import { deleteBookmarkIds } from "../../services/chrome/bookmarkService"
 import { toBookmarkId } from "../../domain/utils/resultIds"
-
+import { focusTab, openUrl } from "../../services/chrome/tabsService"
 export function PopupShell() {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [domainOptions, setDomainOptions] = useState<DomainOption[]>([])
@@ -120,7 +119,7 @@ export function PopupShell() {
 
     requestConfirm(
       `Delete selected (${selected.length})?`,
-      `This will delete ${selected.length} item(s) from ${filters.scope === "both" ? "History and/or Bookmarks" : filters.scope}.`,
+      `This will delete ${selected.length} item(s) from ${filters.scope === "all" ? "History and/or Bookmarks" : filters.scope}.`,
       async () => {
         await runDelete(selected)
       },
@@ -234,7 +233,13 @@ export function PopupShell() {
           onToggleSelected={toggleSelected}
           onSelectAllVisible={selectAllVisible}
           onClearSelection={clearSelection}
-          onOpenUrl={(url) => openUrl(url)}
+          onOpenItem={async (item) => {
+            if (item.kind === "tab" && item.tabId != null) {
+              await focusTab(item.tabId, item.windowId)
+              return
+            }
+            await openUrl(item.url)
+          }}
           onRequestDeleteOne={requestDeleteOne}
         />
       </div>
