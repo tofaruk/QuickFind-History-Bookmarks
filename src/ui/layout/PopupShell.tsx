@@ -1,20 +1,38 @@
-import { useMemo, useState } from "react"
-import SearchBar from "../components/SearchBar"
-import { ScopeTabs } from "../components/ScopeTabs"
-import { FilterRow } from "../components/FilterRow"
-import { ResultsList } from "../components/ResultsList"
-import type { FilterState, Scope } from "../../domain/types/filter"
-import { DEFAULT_FILTERS } from "../../domain/utils/defaultFilters"
-import { useSearchResults } from "../hooks/useSearchResults"
-import { openUrl } from "../../services/chrome/tabsService"
+import SearchBar from "../components/SearchBar";
+import { ScopeTabs } from "../components/ScopeTabs";
+import { FilterRow } from "../components/FilterRow";
+import { ResultsList } from "../components/ResultsList";
+import type { FilterState, Scope } from "../../domain/types/filter";
+import { DEFAULT_FILTERS } from "../../domain/utils/defaultFilters";
+import { useSearchResults } from "../hooks/useSearchResults";
+import { openUrl } from "../../services/chrome/tabsService";
+import { useEffect, useMemo, useState } from "react";
+import type { DomainOption } from "../../services/chrome/domainService";
+import { getTopDomains } from "../../services/chrome/domainService";
+import { DomainSelect } from "../components/DomainSelect";
 
 export function PopupShell() {
-  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
 
-  const scopeValue: Scope = filters.scope
-  const trimmedQuery = useMemo(() => filters.query.trim(), [filters.query])
+  const scopeValue: Scope = filters.scope;
+  const trimmedQuery = useMemo(() => filters.query.trim(), [filters.query]);
 
-  const { results, isLoading, error } = useSearchResults(filters)
+  const { results, isLoading, error } = useSearchResults(filters);
+  const [domainOptions, setDomainOptions] = useState<DomainOption[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    getTopDomains({ maxDomains: 20 })
+      .then((opts) => {
+        if (!cancelled) setDomainOptions(opts);
+      })
+      .catch(() => {
+        // ignore; domain filter still usable as "All sites"
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="flex h-full flex-col gap-3">
@@ -44,7 +62,21 @@ export function PopupShell() {
         onChange={(s) => setFilters((prev) => ({ ...prev, scope: s }))}
       />
 
-      <FilterRow domain={filters.domain} timeRange={filters.timeRange} limit={filters.limit} />
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="w-[180px]">
+          <DomainSelect
+            value={filters.domain}
+            options={domainOptions}
+            onChange={(d) => setFilters((prev) => ({ ...prev, domain: d }))}
+          />
+        </div>
+
+        <FilterRow
+          domain={filters.domain}
+          timeRange={filters.timeRange}
+          limit={filters.limit}
+        />
+      </div>
 
       <div className="min-h-0 flex-1">
         <ResultsList
@@ -61,5 +93,5 @@ export function PopupShell() {
         <span>{filters.scope.toUpperCase()}</span>
       </footer>
     </div>
-  )
+  );
 }

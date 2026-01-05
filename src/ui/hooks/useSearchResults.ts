@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import type { FilterState } from "../../domain/types/filter"
 import type { ResultItem } from "../../domain/types/result"
 import { searchHistory } from "../../services/chrome/historyService"
+import { searchBookmarks } from "../../services/chrome/bookmarkService"
 import { useDebouncedValue } from "./useDebouncedValue"
 
 export function useSearchResults(filters: FilterState) {
@@ -19,7 +20,6 @@ export function useSearchResults(filters: FilterState) {
   useEffect(() => {
     const q = effectiveFilters.query.trim()
 
-    // For premium UX: don’t search until user types something.
     if (q.length === 0) {
       setResults([])
       setIsLoading(false)
@@ -40,10 +40,25 @@ export function useSearchResults(filters: FilterState) {
           parts.push(...(await searchHistory(effectiveFilters)))
         }
 
-        // Bookmarks next step
-        // if (effectiveFilters.scope === "bookmarks" || effectiveFilters.scope === "both") { ... }
+        if (effectiveFilters.scope === "bookmarks" || effectiveFilters.scope === "both") {
+          parts.push(...(await searchBookmarks(effectiveFilters)))
+        }
 
-        if (!cancelled) setResults(parts)
+        // When scope is "both", we want a useful mixed order:
+        // - history sorted by lastVisitTime already
+        // - bookmarks sorted by title
+        // We’ll do a simple merge strategy:
+        //   - if both: prefer recent history first, then bookmarks
+        // (Later we can interleave/rank)
+        const merged =
+          effectiveFilters.scope === "both"
+            ? [
+                ...parts.filter((p) => p.kind === "history"),
+                ...parts.filter((p) => p.kind === "bookmark"),
+              ]
+            : parts
+
+        if (!cancelled) setResults(merged)
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : String(e))
       } finally {
