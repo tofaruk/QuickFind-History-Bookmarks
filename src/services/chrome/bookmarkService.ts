@@ -153,3 +153,25 @@ export async function searchBookmarks(
 
   return results.slice(0, filters.limit);
 }
+
+
+export async function deleteBookmarkIds(bookmarkIds: string[]): Promise<void> {
+  if (typeof chrome === "undefined" || !chrome.bookmarks?.remove) {
+    throw new Error("chrome.bookmarks.remove API is not available in this context.")
+  }
+//TODO use assertChromeBookmarksAvailable
+  const unique = Array.from(new Set(bookmarkIds)).filter(Boolean)
+
+  await Promise.all(
+    unique.map(
+      (id) =>
+        new Promise<void>((resolve, reject) => {
+          chrome.bookmarks.remove(id, () => {
+            const err = chrome.runtime?.lastError
+            if (err) reject(new Error(err.message))
+            else resolve()
+          })
+        }),
+    ),
+  )
+}

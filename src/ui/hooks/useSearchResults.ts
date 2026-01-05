@@ -7,19 +7,17 @@ import { useDebouncedValue } from "./useDebouncedValue"
 
 const FETCH_LIMIT = 200
 
-export function useSearchResults(filters: FilterState) {
+export function useSearchResults(filters: FilterState, refreshToken: number) {
   const [baseResults, setBaseResults] = useState<ResultItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const debouncedQuery = useDebouncedValue(filters.query, 200)
 
-  // Fetch filters ignore "limit" to prevent refetch on limit changes
   const fetchFilters = useMemo<FilterState>(
     () => ({ ...filters, query: debouncedQuery, limit: FETCH_LIMIT }),
-    // IMPORTANT: exclude filters.limit
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [filters.query, debouncedQuery, filters.scope, filters.domain, filters.timeRange],
+    [filters.query, debouncedQuery, filters.scope, filters.domain, filters.timeRange, refreshToken],
   )
 
   useEffect(() => {
@@ -72,7 +70,6 @@ export function useSearchResults(filters: FilterState) {
     }
   }, [fetchFilters])
 
-  // Slice locally for UI limit (no refetch)
   const results = useMemo(() => baseResults.slice(0, filters.limit), [baseResults, filters.limit])
 
   return { results, isLoading, error }

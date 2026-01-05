@@ -61,3 +61,27 @@ export async function searchHistory(filters: FilterState): Promise<ResultItem[]>
 
   return mapped
 }
+
+
+export async function deleteHistoryUrls(urls: string[]): Promise<void> {
+  if (typeof chrome === "undefined" || !chrome.history?.deleteUrl) {
+    throw new Error("chrome.history.deleteUrl API is not available in this context.")
+  }
+
+  // TODO use   assertChromeHistoryAvailable()
+
+  const unique = Array.from(new Set(urls)).filter(Boolean)
+
+  await Promise.all(
+    unique.map(
+      (url) =>
+        new Promise<void>((resolve, reject) => {
+          chrome.history.deleteUrl({ url }, () => {
+            const err = chrome.runtime?.lastError
+            if (err) reject(new Error(err.message))
+            else resolve()
+          })
+        }),
+    ),
+  )
+}
