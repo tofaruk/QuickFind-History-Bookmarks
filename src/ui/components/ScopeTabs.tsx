@@ -15,7 +15,7 @@ const TABS: Array<{ key: Scope; label: string }> = [
 export function ScopeTabs({ value = "all", onChange }: ScopeTabsProps) {
   return (
     <div className="flex items-center gap-2">
-      <div className="inline-flex rounded-xl bg-gray-100 p-1">
+      <div className="inline-flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1">
         {TABS.map((t) => {
           const active = value === t.key
           return (
@@ -24,8 +24,8 @@ export function ScopeTabs({ value = "all", onChange }: ScopeTabsProps) {
               type="button"
               onClick={() => onChange?.(t.key)}
               className={[
-                "rounded-lg px-3 py-1.5 text-sm font-medium transition",
-                active ? "bg-white shadow-sm" : "text-gray-600 hover:text-gray-900",
+                "rounded-lg px-3 py-1.5 text-sm font-medium transition text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white",
+                active ? "bg-white dark:bg-gray-900 shadow-sm" : "text-gray-600",
               ].join(" ")}
             >
               {t.label}

@@ -10,7 +10,7 @@ export default function SearchBar({
   onClear,
 }: SearchBarProps) {
   return (
-    <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 shadow-sm">
+    <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-white dark:bg-gray-800 px-3 py-2 shadow-sm">
       <input
         className="w-full bg-transparent text-sm outline-none placeholder:text-gray-400"
         placeholder="Search history & bookmarks…"
