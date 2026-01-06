@@ -1,73 +1,52 @@
-# React + TypeScript + Vite
+# QuickFind: History, Bookmarks & Tabs
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🚀 **QuickFind** is a fast, lightweight Chrome extension that lets you instantly search and manage your **browser history, bookmarks, and open tabs** from a single popup.
 
-Currently, two official plugins are available:
+Designed for speed, productivity, and a clean UI — built with **React, TypeScript, Tailwind CSS, and Vite**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🔍 **Unified Search**
+  - Search **History**
+  - Search **Bookmarks**
+  - Search **Open Tabs**
+  - Or search **All** at once
 
-## Expanding the ESLint configuration
+- 🧭 **Instant Tab Jump**
+  - Click an open tab result to jump directly to that tab (even across windows)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🗑️ **Smart Actions**
+  - Delete history entries
+  - Remove bookmarks
+  - Close open tabs
+  - Bulk actions: remove **selected** or **visible** items
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- 🌐 **Domain Filtering**
+  - Quickly filter results by top visited domains
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- ⏱️ **Time Range Filters**
+  - Today, Last 7 days, Last 30 days, All time
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- 📊 **Result Limits**
+  - Choose how many results to show (25 / 50 / 100)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- 🌗 **Light & Dark Mode**
+  - Manual theme toggle
+  - System theme support
+  - Preference is remembered
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- ⚡ **Fast & Lightweight**
+  - No background polling
+  - Minimal permissions
+  - Optimized for instant results
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## 🖼️ Demo
+
+> 📌 Replace the file name with your actual GIF once added
+
+```md
+![QuickFind Demo](./screenshots/demo.gif)
