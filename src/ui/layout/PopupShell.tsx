@@ -24,7 +24,6 @@ import {
 
 import { useThemeMode } from "../hooks/useThemeMode";
 import { ThemeSwitcher } from "../components/ThemeSwitcher";
-import { truncate } from "fs";
 import { truncateUrl } from "../../domain/utils/url";
 
 export function PopupShell() {
