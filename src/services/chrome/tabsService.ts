@@ -91,8 +91,7 @@ export async function searchOpenTabs(
         url,
         hostname,
         faviconUrl: t.favIconUrl || faviconUrlFor(url, 16),
-        metaLine: "Open tab",
-        // store tabId/windowId via metaLine is not ideal, so we’ll add fields below in Step 7.2
+        metaLine: "Open tab: click to focus",
       };
     });
 

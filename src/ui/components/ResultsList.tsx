@@ -43,17 +43,17 @@ export function ResultsList({
     : "Type to search, or select a site to browse";
 
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white">
+    <div className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white dark:bg-gray-800">
       <div className="border-b border-gray-100 px-4 py-3">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <div className="text-sm font-medium text-gray-900">Results</div>
-            <div className="text-xs text-gray-500">{subtitle}</div>
+            <div className="text-sm font-medium text-gray-900 dark:text-gray-50">Results</div>
+            <div className="text-xs text-gray-500 dark:text-gray-100">{subtitle}</div>
           </div>
 
           {hasResults && (
             <div className="flex items-center gap-2">
-              <label className="flex items-center gap-2 text-xs text-gray-600">
+              <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-100">
                 <input
                   type="checkbox"
                   checked={allVisibleSelected}
@@ -95,7 +95,7 @@ export function ResultsList({
             {results.map((r) => {
               const checked = selectedIds.has(r.id);
               return (
-                <li key={r.id} className="px-3 py-2 hover:bg-gray-50">
+                <li key={r.id} className="px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-900">
                   <div className="flex items-start gap-3">
                     <input
                       type="checkbox"
@@ -117,14 +117,14 @@ export function ResultsList({
                         className="mt-0.5 h-4 w-4 flex-none"
                       /> 
                       <div className="min-w-0 flex-1">
-                        <div className="truncate text-sm font-medium text-gray-900">
+                        <div className="truncate text-sm font-medium text-gray-900 dark:text-gray-50">
                           {r.title}
                         </div>
-                        <div className="truncate text-xs text-gray-500">
+                        <div className="truncate text-xs text-gray-700 dark:text-gray-200">
                           {r.url}
                         </div>
                         {r.metaLine && (
-                          <div className="truncate text-[11px] text-gray-400">
+                          <div className="truncate text-[11px] text-gray-400 dark:text-gray-200">
                             {r.metaLine}
                           </div>
                         )}
@@ -132,7 +132,7 @@ export function ResultsList({
                     </button>
 
                     <div className="flex items-center gap-2">
-                      <div className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] text-gray-600">
+                      <div className="rounded-full bg-gray-100 dark:bg-gray-900 px-2 py-0.5 text-[10px] text-gray-600 dark:text-gray-200">
                         {r.kind}
                       </div>
                       <button

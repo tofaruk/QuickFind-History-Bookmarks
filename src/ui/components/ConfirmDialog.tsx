@@ -28,15 +28,15 @@ export function ConfirmDialog({
         onClick={onCancel}
         role="presentation"
       />
-      <div className="relative w-[360px] max-w-[92vw] rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
-        <div className="text-base font-semibold text-gray-900">{title}</div>
-        <div className="mt-2 text-sm text-gray-600">{message}</div>
+      <div className="relative w-[360px] max-w-[92vw] rounded-2xl border border-gray-200 bg-white dark:bg-gray-900 p-4 shadow-xl">
+        <div className="text-base font-semibold text-gray-900 dark:text-gray-50">{title}</div>
+        <div className="mt-2 text-sm text-gray-600 dark:text-gray-200">{message}</div>
 
         <div className="mt-4 flex items-center justify-end gap-2">
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50"
+            className="rounded-xl border border-gray-200 bg-white dark:bg-gray-800 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-950"
           >
             {cancelLabel}
           </button>
