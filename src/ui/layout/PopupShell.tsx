@@ -24,6 +24,8 @@ import {
 
 import { useThemeMode } from "../hooks/useThemeMode";
 import { ThemeSwitcher } from "../components/ThemeSwitcher";
+import { truncate } from "fs";
+import { truncateUrl } from "../../domain/utils/url";
 
 export function PopupShell() {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
@@ -122,9 +124,10 @@ export function PopupShell() {
   }
 
   function requestDeleteOne(item: ResultItem) {
+    const url = truncateUrl(item.url, 70);
     requestConfirm(
       "Delete item?",
-      `This will remove this ${item.kind} entry.\n\n${item.url}`,
+      `This will remove this ${item.kind} entry.\n\n${url}`,
       async () => {
         await runDelete([item]);
       }
@@ -203,17 +206,17 @@ export function PopupShell() {
       />
 
       {/* Bulk actions bar */}
-      <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-600">
+      <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white dark:bg-gray-800 px-3 py-2 text-xs text-gray-600 dark:text-gray-200">
         <div className="flex items-center gap-2">
           <span>
             Selected:{" "}
-            <span className="font-semibold text-gray-900">{selectedCount}</span>
+            <span className="font-semibold text-gray-900 dark:text-gray-50">{selectedCount}</span>
           </span>
           {selectedCount > 0 && (
             <button
               type="button"
               onClick={clearSelection}
-              className="rounded-lg px-2 py-1 hover:bg-gray-50"
+              className="rounded-lg px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-900"
             >
               Clear
             </button>
@@ -228,7 +231,7 @@ export function PopupShell() {
             className={[
               "rounded-xl px-3 py-2 text-xs text-white",
               selectedCount === 0
-                ? "bg-gray-300"
+                ? "bg-gray-600 dark:bg-gray-900"
                 : "bg-red-600 hover:bg-red-700",
             ].join(" ")}
             title="Delete selected items"
@@ -243,8 +246,8 @@ export function PopupShell() {
             className={[
               "rounded-xl px-3 py-2 text-xs text-white",
               results.length === 0
-                ? "bg-gray-300"
-                : "bg-gray-900 hover:bg-gray-800",
+                ? "bg-gray-600 dark:bg-gray-900"
+                : "bg-gray-600 hover:bg-gray-800",
             ].join(" ")}
             title="Delete all visible results"
           >

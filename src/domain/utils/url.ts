@@ -11,6 +11,11 @@ export function getHostname(url: string): string {
   return u?.hostname ?? "";
 }
 
+export function truncateUrl(url: string, maxLength: number): string {
+  if (url.length <= maxLength) return url;
+  return url.slice(0, maxLength - 3) + "...";
+}
+
 export function normalizeHostname(hostname: string): string {
   const h = hostname.toLowerCase();
   return h.startsWith("www.") ? h.slice(4) : h;
