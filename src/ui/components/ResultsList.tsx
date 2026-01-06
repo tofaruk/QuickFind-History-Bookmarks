@@ -120,7 +120,7 @@ export function ResultsList({
                         <div className="truncate text-sm font-medium text-gray-900 dark:text-gray-50">
                           {r.title}
                         </div>
-                        <div className="truncate text-xs text-gray-700 dark:text-gray-200">
+                        <div className="truncate text-xs text-gray-500">
                           {r.url}
                         </div>
                         {r.metaLine && (
