@@ -189,7 +189,16 @@ export function PopupShell() {
 
       <ScopeTabs
         value={scopeValue}
-        onChange={(s) => setFilters((prev) => ({ ...prev, scope: s }))}
+        onChange={(s) =>
+          setFilters((prev) => {
+            return { 
+              ...prev, 
+              scope: s, 
+              domain: null ,
+              timeRange: { kind: "today" }
+            };
+          })
+        }
       />
 
       <FilterRow
@@ -209,7 +218,9 @@ export function PopupShell() {
         <div className="flex items-center gap-2">
           <span>
             Selected:{" "}
-            <span className="font-semibold text-gray-900 dark:text-gray-50">{selectedCount}</span>
+            <span className="font-semibold text-gray-900 dark:text-gray-50">
+              {selectedCount}
+            </span>
           </span>
           {selectedCount > 0 && (
             <button

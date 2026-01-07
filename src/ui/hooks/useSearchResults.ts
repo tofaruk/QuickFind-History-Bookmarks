@@ -28,17 +28,6 @@ export function useSearchResults(filters: FilterState, refreshToken: number) {
   );
 
   useEffect(() => {
-const q = fetchFilters.query.trim()
-const hasDomain = !!fetchFilters.domain
-const wantsInitialOpenTabs = fetchFilters.scope === "open" || fetchFilters.scope === "all"
-
-
-if (q.length === 0 && !hasDomain && !wantsInitialOpenTabs) {
-      setBaseResults([]);
-      setIsLoading(false);
-      setError(null);
-      return;
-    }
 
     let cancelled = false;
 

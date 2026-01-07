@@ -118,8 +118,6 @@ export async function searchBookmarks(
 
   // For premium UX: don’t return “everything” if query is empty.
 
-  const hasDomain = !!domain;
-  if (q.length === 0 && !hasDomain) return [];
 
   const tree = await getBookmarksTree();
   const idx = buildIndex(tree);
