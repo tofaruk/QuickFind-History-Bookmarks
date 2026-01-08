@@ -123,9 +123,9 @@ export function PopupShell() {
   }
 
   function requestDeleteOne(item: ResultItem) {
-    const url = truncateUrl(item.url, 70);
+    const url = truncateUrl(item.url, 200);
     requestConfirm(
-      "Delete item?",
+      "Remove item?",
       `This will remove this ${item.kind} entry.\n\n${url}`,
       async () => {
         await runDelete([item]);
@@ -138,8 +138,8 @@ export function PopupShell() {
     if (selected.length === 0) return;
 
     requestConfirm(
-      `Delete selected (${selected.length})?`,
-      `This will delete ${selected.length} item(s) from ${
+      `Remove selected (${selected.length})?`,
+      `This will remove ${selected.length} item(s) from ${
         filters.scope === "all" ? "History and/or Bookmarks" : filters.scope
       }.`,
       async () => {
@@ -151,8 +151,8 @@ export function PopupShell() {
   function requestDeleteVisible() {
     if (results.length === 0) return;
     requestConfirm(
-      `Delete visible (${results.length})?`,
-      `This will delete all currently visible results (${results.length}).`,
+      `Remove visible (${results.length})?`,
+      `This will remove all currently visible results (${results.length}).`,
       async () => {
         await runDelete(results);
       }
@@ -247,7 +247,7 @@ export function PopupShell() {
                 ? "bg-gray-100 dark:bg-gray-900"
                 : "bg-red-600 hover:bg-red-700 text-white",
             ].join(" ")}
-            title="Delete selected items"
+            title="Remove selected items"
           >
             Remove selected ({selectedCount})
           </button>
@@ -262,7 +262,7 @@ export function PopupShell() {
                 ? " "
                 : " hover:bg-red-700 hover:text-white",
             ].join(" ")}
-            title="Delete all visible results"
+            title="Remove all visible results"
           >
             Remove visible ({results.length})
           </button>
@@ -291,7 +291,7 @@ export function PopupShell() {
       </div>
 
       <footer className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-100">
-        <span>Bulk delete is live ✅</span>
+        <span>Bulk remove is live ✅</span>
         <span>{filters.scope.toUpperCase()}</span>
       </footer>
 
@@ -299,7 +299,7 @@ export function PopupShell() {
         open={confirmOpen}
         title={confirmTitle}
         message={confirmMessage}
-        confirmLabel="Delete"
+        confirmLabel="Remove"
         cancelLabel="Cancel"
         danger
         onCancel={() => setConfirmOpen(false)}

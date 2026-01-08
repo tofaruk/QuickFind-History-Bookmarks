@@ -28,9 +28,9 @@ export function ConfirmDialog({
         onClick={onCancel}
         role="presentation"
       />
-      <div className="relative w-[360px] max-w-[92vw] rounded-2xl border border-gray-200 bg-white dark:bg-gray-900 p-4 shadow-xl">
+      <div className="relative w-90 max-w-[92vw] rounded-2xl border border-gray-200 bg-white dark:bg-gray-900 p-4 shadow-xl">
         <div className="text-base font-semibold text-gray-900 dark:text-gray-50">{title}</div>
-        <div className="mt-2 text-sm text-gray-600 dark:text-gray-200">{message}</div>
+        <div className="mt-2 text-sm text-gray-600 dark:text-gray-200 min-w-0 wrap-break-word whitespace-pre-line">{message}</div>
 
         <div className="mt-4 flex items-center justify-end gap-2">
           <button

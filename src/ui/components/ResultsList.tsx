@@ -139,9 +139,9 @@ export function ResultsList({
                         type="button"
                         onClick={() => onRequestDeleteOne(r)}
                         className="rounded-lg px-2 py-1 text-xs text-red-700 hover:bg-red-50"
-                        title={r.kind === "tab" ? "Close tab" : "Delete"}
+                        title={r.kind === "tab" ? "Close tab" : "Remove"}
                       >
-                        {r.kind === "tab" ? "Close" : "Delete"}
+                        {r.kind === "tab" ? "Close" : "Remove"}
                       </button>
                     </div>
                   </div>
