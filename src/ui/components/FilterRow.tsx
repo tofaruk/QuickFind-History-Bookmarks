@@ -8,6 +8,7 @@ type FilterRowProps = {
   domain: string | null
   timeRange: TimeRange
   limit: number
+  scope: string | null
 
   domainOptions: DomainOption[]
   onDomainChange: (hostname: string | null) => void
@@ -19,6 +20,7 @@ export function FilterRow({
   domain,
   timeRange,
   limit,
+  scope,
   domainOptions,
   onDomainChange,
   onTimeRangeChange,
@@ -31,7 +33,7 @@ export function FilterRow({
       </div>
 
       <div className="w-40">
-        <TimeRangeSelect value={timeRange} onChange={onTimeRangeChange} />
+        <TimeRangeSelect value={timeRange} currentScope={scope} onChange={onTimeRangeChange} />
       </div>
 
       <div className="w-30">

@@ -76,7 +76,7 @@ function getFolderPath(nodeId: string, idx: Index, maxDepth = 50): string {
   parts.reverse();
 
   // Remove generic roots like "Bookmarks bar" / "Other bookmarks" if you want later.
-  return parts.join(" / ");
+  return parts.join(" ➜ ");
 }
 
 function normalizeText(s: string): string {

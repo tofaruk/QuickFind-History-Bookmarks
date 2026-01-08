@@ -3,6 +3,7 @@ import type { TimeRange } from "../../domain/types/filter";
 
 type TimeRangeSelectProps = {
   value: TimeRange;
+  currentScope: string|null;
   onChange: (value: TimeRange) => void;
 };
 
@@ -29,7 +30,7 @@ function useClickOutside(
   }, [refs, onOutside, enabled]);
 }
 
-export function TimeRangeSelect({ value, onChange }: TimeRangeSelectProps) {
+export function TimeRangeSelect({ value, onChange, currentScope }: TimeRangeSelectProps) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -44,12 +45,15 @@ export function TimeRangeSelect({ value, onChange }: TimeRangeSelectProps) {
     return [{ kind: "today" }, { kind: "thisWeek" }, ...past];
   }, []);
 
+  const isDisabled = currentScope !== "history";
   return (
     <div className="relative">
       <button
+        disabled={isDisabled}
         ref={buttonRef}
         type="button"
-        className="inline-flex w-full items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:hover:bg-gray-900 px-3 py-2 text-sm shadow-sm hover:bg-gray-50 dark:hover:text-gray-900"
+        className="disabled:cursor-not-allowed
+    disabled:hover:bg-gray-400  inline-flex w-full items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:hover:bg-gray-900 px-3 py-2 text-sm shadow-sm hover:bg-gray-50 dark:hover:text-gray-900"
         onClick={() => setOpen((v) => !v)}
         title="Time range"
       >
@@ -89,7 +93,9 @@ export function TimeRangeSelect({ value, onChange }: TimeRangeSelectProps) {
                     {labelFor(opt)}
                   </span>
                   {active && (
-                    <span className="text-xs text-gray-500 dark:text-gray-100">Selected</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-100">
+                      Selected
+                    </span>
                   )}
                 </button>
               );

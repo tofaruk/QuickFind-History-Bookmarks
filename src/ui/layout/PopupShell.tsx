@@ -192,7 +192,6 @@ export function PopupShell() {
         onChange={(s) =>
 
 
-          // TODO: disable time range if scope is not history and make sure time range is not applied on disabled 
           setFilters((prev) => {
             return { 
               ...prev, 
@@ -209,6 +208,7 @@ export function PopupShell() {
         timeRange={filters.timeRange}
         limit={filters.limit}
         domainOptions={domainOptions}
+        scope={filters.scope}
         onDomainChange={(d) => setFilters((prev) => ({ ...prev, domain: d }))}
         onTimeRangeChange={(tr) =>
           setFilters((prev) => ({ ...prev, timeRange: tr }))
