@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "QuickFind: History, Bookmarks & Tabs",
   "description": "Quickly search and access your browsing history, bookmarks, and open tabs.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "action": {
     "default_title": "QuickFind",
     "default_popup": "popup.html"
