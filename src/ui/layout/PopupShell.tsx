@@ -190,6 +190,9 @@ export function PopupShell() {
       <ScopeTabs
         value={scopeValue}
         onChange={(s) =>
+
+
+          // TODO: disable time range if scope is not history and make sure time range is not applied on disabled 
           setFilters((prev) => {
             return { 
               ...prev, 
@@ -239,10 +242,10 @@ export function PopupShell() {
             onClick={requestDeleteSelected}
             disabled={selectedCount === 0}
             className={[
-              "rounded-xl px-3 py-2 text-xs text-white",
+              "rounded-xl px-3 py-2 text-xs text-gray-700 dark:text-white",
               selectedCount === 0
-                ? "bg-gray-600 dark:bg-gray-900"
-                : "bg-red-600 hover:bg-red-700",
+                ? "bg-gray-100 dark:bg-gray-900"
+                : "bg-red-600 hover:bg-red-700 text-white",
             ].join(" ")}
             title="Delete selected items"
           >
@@ -254,10 +257,10 @@ export function PopupShell() {
             onClick={requestDeleteVisible}
             disabled={results.length === 0}
             className={[
-              "rounded-xl px-3 py-2 text-xs text-white",
+              "rounded-xl px-3 py-2 text-xs text-gray-700 dark:text-white bg-gray-100 dark:bg-gray-900",
               results.length === 0
-                ? "bg-gray-600 dark:bg-gray-900"
-                : "bg-gray-600 hover:bg-gray-800",
+                ? " "
+                : " hover:bg-red-700 hover:text-white",
             ].join(" ")}
             title="Delete all visible results"
           >
